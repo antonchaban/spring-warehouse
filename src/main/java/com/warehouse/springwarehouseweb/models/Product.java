@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -39,5 +40,10 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Set<Category> category = new HashSet<>();
 
-    // todo add relationship with sales and user
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn
+    private User user;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private List<Sales> sales;
 }

@@ -5,6 +5,7 @@ import com.warehouse.springwarehouseweb.models.enums.Role;
 import com.warehouse.springwarehouseweb.repositories.UserRepository;
 import com.warehouse.springwarehouseweb.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.naming.NameAlreadyBoundException;
@@ -15,7 +16,7 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void save(User user) {
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByLogin(user.getLogin()) != null) {
             throw new NameAlreadyBoundException("This login is already taken");
         }
-//        user.setPassword(passwordEncoder.encode(user.getPassword())); todo
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.getRoles().add(Role.CUSTOMER);
         userRepository.save(user);
     }

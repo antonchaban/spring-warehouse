@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,10 +37,16 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
 
-    // todo add relationship with product
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Product> products;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Sales> sales;
 
+    public boolean isAdmin(){
+        return roles.contains(Role.ADMIN);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

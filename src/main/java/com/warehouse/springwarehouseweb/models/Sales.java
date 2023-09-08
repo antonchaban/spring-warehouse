@@ -17,5 +17,11 @@ public class Sales {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // todo add relationship with product
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn
+    private Product product;
+
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn
+    private User user;
 }
