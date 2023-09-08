@@ -2,7 +2,6 @@ package com.warehouse.springwarehouseweb.services.impl;
 
 import com.warehouse.springwarehouseweb.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +14,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByLogin(username);
+        System.out.println(userRepository.findUserByLogin(username));
+        return userRepository.findUserByLogin(username);
     }
 }

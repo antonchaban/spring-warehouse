@@ -46,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void createProduct(Product product, Principal principal) {
         if (principal == null) product.setUser(new User());
-        else product.setUser(userRepository.findByLogin(principal.getName()));
+        else product.setUser(userRepository.findUserByLogin(principal.getName()));
         // todo maybe need to add categories field
         productRepository.save(product);
     }

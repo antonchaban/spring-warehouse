@@ -36,12 +36,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByPrincipal(Principal principal) {
         if (principal == null) return new User();
-        return userRepository.findByLogin(principal.getName());
+        return userRepository.findUserByLogin(principal.getName());
     }
 
     @Override
     public void createUser(User user) throws NameAlreadyBoundException {
-        if (userRepository.findByLogin(user.getLogin()) != null) {
+        if (userRepository.findUserByLogin(user.getLogin()) != null) {
             throw new NameAlreadyBoundException("This login is already taken");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
