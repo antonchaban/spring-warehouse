@@ -38,4 +38,10 @@ public class UserController {
         userService.createUser(user);
         return "redirect:/signin";
     }
+
+    @GetMapping("/users")
+    public String listUsers(Model model, Principal principal) {
+        model.addAttribute("users", userService.findAll());
+        return "users";
+    }
 }
