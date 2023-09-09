@@ -73,7 +73,8 @@ public class ProductServiceImpl implements ProductService {
             product.setDescription(updProduct.getDescription());
             try {
                 product.getCategory().clear();
-                product.getCategory().add(Category.valueOf(product.getCategory().toString())); // todo check this
+                String category = updProduct.getCategory().toArray()[0].toString();
+                product.getCategory().add(Category.valueOf(category)); // todo check this
             } catch (NullPointerException e) {
                 System.out.println("Category is null, setting other value");
                 product.getCategory().clear();

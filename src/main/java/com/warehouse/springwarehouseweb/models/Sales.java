@@ -27,5 +27,5 @@ public class Sales {
     @JoinColumn
     private User user;
 
-    private Date articleDate;
+    private Date saleDate;
 }
