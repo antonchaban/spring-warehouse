@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @AllArgsConstructor
 @Getter
@@ -24,4 +26,6 @@ public class Sales {
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn
     private User user;
+
+    private Date articleDate;
 }
