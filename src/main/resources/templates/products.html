@@ -73,8 +73,12 @@
                     <td th:text="${product.user.name}"></td>
                     <td th:text="${product.price}">USD</td>
                     <td>
-                        <a th:href="@{/product/{id}/edit(id=${product.id})}" class="btn btn-primary">Update</a>
-                        <a th:href="@{/product/{id}(id=${product.id})}" class="btn btn-danger">Delete</a>
+                        <a th:href="@{/product/{id}/edit(id=${product.id})}" class="btn btn-primary" style="display: inline-block; margin-right: 10px;">Update</a>
+                        <form th:action="@{/product/__${product.id}__/delete}" method="post" style="display: inline-block;">
+                            <button type="submit" class="btn btn-danger">
+                                Delete
+                            </button>
+                        </form>
                     </td>
                 </tr>
                 </tbody>
