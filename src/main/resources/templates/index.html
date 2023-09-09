@@ -41,7 +41,7 @@
             </div>
 
             <div sec:authorize="isAuthenticated()">
-                Authenticated as <span sec:authentication="principal.name"></span>
+                <a class="btn btn-info" th:href="@{/profile}"><span sec:authentication="principal.name"></span></a>
                 <form action="/logout" method="post">
                     <button type="submit" style="text-align: center; width: 100%"
                             class="btn btn-primary btn-sm btn-block mt-2">

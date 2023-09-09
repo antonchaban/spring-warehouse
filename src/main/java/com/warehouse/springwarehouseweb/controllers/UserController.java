@@ -40,8 +40,15 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public String listUsers(Model model, Principal principal) {
+    public String listUsers(Model model) {
         model.addAttribute("users", userService.findAll());
         return "users";
+    }
+
+    @GetMapping("/profile")
+    public String myProfile(Model model, Principal principal) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        model.addAttribute("products", userService.getUserByPrincipal(principal).getProducts());
+        return "profile";
     }
 }

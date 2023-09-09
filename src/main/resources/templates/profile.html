@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <link th:href="@{../static/css/style.css}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZ5P5stwE6f5P"
+            crossorigin="anonymous"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar/Navbar -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+            <!-- Logo -->
+            <div>
+                <img class="img-fluid" th:src="@{./static/images/warehouse_logo.png}"/>
+            </div>
+
+            <!-- Links -->
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/users}">Users</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Categories</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/products}">Products</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/sales}">Sales</a></li>
+            </ul>
+
+            <!-- Sign-in and Sign-up buttons -->
+            <div sec:authorize="!isAuthenticated()" class="mt-auto">
+                <button class="btn btn-primary btn-sm btn-block" type="button"
+                        onclick="window.location.href = '/signin'">
+                    Sign In
+                </button>
+                <button class="btn btn-primary btn-sm btn-block mt-2" type="button"
+                        onclick="window.location.href = '/signup'">
+                    Sign Up
+                </button>
+            </div>
+
+            <div sec:authorize="isAuthenticated()">
+                Authenticated as <span sec:authentication="principal.name"></span>
+                <form action="/logout" method="post">
+                    <button type="submit" style="text-align: center; width: 100%"
+                            class="btn btn-primary btn-sm btn-block mt-2">
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 content">
+            <!-- User Profile Section -->
+            <div class="user-profile">
+                <h2>User Profile</h2>
+                <!-- Settings Button -->
+                <button class="btn btn-primary btn-sm" type="button" id="settings-button">
+                    Settings
+                </button>
+                <!-- Collapsible Products Section -->
+                <!-- Collapsible Products Section -->
+                <a class="btn btn-dark mt-3 mb-3" style="text-align: center; width: 100%"
+                   data-toggle="collapse" href="#collapseExample" role="button"
+                   aria-expanded="true" aria-controls="collapseExample">
+                    My products
+                    <div class="collapse mb-3" id="collapseExample" style="">
+                        <div class="card card-body">
+                            <h4>Products</h4>
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="product : ${products}">
+                                    <td th:text="${product.name}"></td>
+                                    <td th:text="${product.description}"></td>
+                                    <td th:text="${product.quantity}"></td>
+                                    <td th:text="${product.price}"></td>
+                                    <td>
+                                        <a th:href="@{/product/__${product.id}__/edit}"
+                                           class="btn btn-primary btn-sm">Edit</a>
+                                        <a th:href="@{/product/__${product.id}__/delete}"
+                                           class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>
