@@ -7,31 +7,7 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
           crossorigin="anonymous">
-    <style>
-        /* Custom CSS for sidebar/navbar */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 250px; /* Adjust as needed */
-            background-color: #f8f9fa;
-            padding-top: 20px;
-        }
-
-        .sidebar a.nav-link {
-            color: #333;
-        }
-
-        .sidebar .btn-primary {
-            width: 100%;
-        }
-
-        .content {
-            margin-left: 250px; /* Same as sidebar width */
-            padding: 15px;
-        }
-    </style>
+    <link th:href="@{../static/css/style.css}" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid">
@@ -66,7 +42,13 @@
             </div>
 
             <div sec:authorize="isAuthenticated()">
-                Authenticated as <span sec:authentication="principal.name"></span></div>
+                Authenticated as <span sec:authentication="principal.name"></span>
+                <form action="/logout" method="post">
+                    <button type="submit" style="text-align: center; width: 100%" class="btn btn-primary btn-sm btn-block mt-2">
+                        Logout
+                    </button>
+                </form>
+            </div>
         </nav>
 
         <!-- Content -->
