@@ -1,6 +1,7 @@
 package com.warehouse.springwarehouseweb.services.impl;
 
 import com.warehouse.springwarehouseweb.models.User;
+import com.warehouse.springwarehouseweb.models.enums.Category;
 import com.warehouse.springwarehouseweb.models.enums.Role;
 import com.warehouse.springwarehouseweb.repositories.UserRepository;
 import com.warehouse.springwarehouseweb.services.UserService;
@@ -52,5 +53,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         userRepository.findById(id).ifPresent(userRepository::delete);
+    }
+
+    public void editUser(User updUser, Long id) {
+        User user = userRepository.findById(id).get();
+        user.setName(updUser.getName());
+        user.setLogin(updUser.getLogin());
+        try {
+            user.getRoles().clear();
+            String role = updUser.getRoles().toArray()[0].toString();
+            user.getRoles().add(Role.valueOf(role));
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
+            System.out.println("Role is null, setting customer value");
+            user.getRoles().clear();
+            user.getRoles().add(Role.CUSTOMER);
+        }
+        userRepository.save(user);
     }
 }

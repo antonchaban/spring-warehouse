@@ -65,7 +65,7 @@ public class ProductController {
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         model.addAttribute("product", productService.findById(id));
 //        return "redirect:/product/" + id; todo
-        return "products";
+        return "redirect:/products";
     }
 
     @PostMapping("/product/{id}/delete")
