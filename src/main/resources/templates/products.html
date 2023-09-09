@@ -62,7 +62,7 @@
                     <th>Quantity</th>
                     <th>Owner</th>
                     <th>Price</th>
-                    <th>Action</th>
+                    <th sec:authorize="hasAuthority('ADMIN')">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -72,7 +72,7 @@
                     <td th:text="${product.quantity}"></td>
                     <td th:text="${product.user.name}"></td>
                     <td th:text="${product.price}">USD</td>
-                    <td>
+                    <td sec:authorize="hasAuthority('ADMIN')">
                         <a th:href="@{/product/{id}/edit(id=${product.id})}" class="btn btn-primary" style="display: inline-block; margin-right: 10px;">Update</a>
                         <form th:action="@{/product/__${product.id}__/delete}" method="post" style="display: inline-block;">
                             <button type="submit" class="btn btn-danger">
