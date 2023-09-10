@@ -57,16 +57,14 @@ public class UserServiceImpl implements UserService {
 
     public void editUser(User updUser, Long id) {
         User user = userRepository.findById(id).get();
-        user.setName(updUser.getName());
-        user.setLogin(updUser.getLogin());
+        if (!(updUser.getName() == null)) user.setName(updUser.getName());
+        if (!(updUser.getLogin() == null)) user.setLogin(updUser.getLogin());
         try {
-            user.getRoles().clear();
             String role = updUser.getRoles().toArray()[0].toString();
+            user.getRoles().clear();
             user.getRoles().add(Role.valueOf(role));
         } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
-            System.out.println("Role is null, setting customer value");
-            user.getRoles().clear();
-            user.getRoles().add(Role.CUSTOMER);
+            System.out.println("Role is null, leave same value");
         }
         userRepository.save(user);
     }

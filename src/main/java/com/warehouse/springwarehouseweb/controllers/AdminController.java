@@ -23,19 +23,6 @@ import java.security.Principal;
 public class AdminController {
     private final UserServiceImpl userService;
 
-    @GetMapping("/user/{id}/edit")
-    public String editUser(@PathVariable Long id, Model model) {
-            model.addAttribute("roles", Role.values());
-            model.addAttribute("user", userService.findById(id));
-            return "user-edit";
-    }
-
-    @PostMapping("/user/{id}/edit")
-    public String editUserPost(User updUser, @PathVariable Long id) {
-        userService.editUser(updUser, id);
-        return "redirect:/users";
-    }
-
     @PostMapping("/user/{id}/delete")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

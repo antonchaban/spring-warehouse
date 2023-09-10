@@ -21,3 +21,11 @@
     margin-left: 250px; /* Same as sidebar width */
     padding: 15px;
 }
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+#productTable {
+    display: none;
+}

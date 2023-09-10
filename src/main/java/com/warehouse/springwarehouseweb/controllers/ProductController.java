@@ -40,7 +40,7 @@ public class ProductController {
     @PostMapping(value = "/products/create")
     public String createProductPost(Product product, Principal principal) {
         productService.createProduct(product, principal);
-        return "redirect:/index";
+        return "redirect:/";
     }
 
     @GetMapping("/product/{id}/edit")

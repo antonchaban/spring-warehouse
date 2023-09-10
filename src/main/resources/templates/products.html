@@ -39,11 +39,11 @@
                     Sign Up
                 </button>
             </div>
-
             <div sec:authorize="isAuthenticated()">
-                Authenticated as <span sec:authentication="principal.name"></span>
+                <a class="btn btn-info" th:href="@{/profile}"><span sec:authentication="principal.name"></span></a>
                 <form action="/logout" method="post">
-                    <button type="submit" style="text-align: center; width: 100%" class="btn btn-primary btn-sm btn-block mt-2">
+                    <button type="submit" style="text-align: center; width: 100%"
+                            class="btn btn-primary btn-sm btn-block mt-2">
                         Logout
                     </button>
                 </form>
@@ -73,8 +73,10 @@
                     <td th:text="${product.user.name}"></td>
                     <td th:text="${product.price}">USD</td>
                     <td sec:authorize="hasAuthority('ADMIN')">
-                        <a th:href="@{/product/{id}/edit(id=${product.id})}" class="btn btn-primary" style="display: inline-block; margin-right: 10px;">Update</a>
-                        <form th:action="@{/product/__${product.id}__/delete}" method="post" style="display: inline-block;">
+                        <a th:href="@{/product/{id}/edit(id=${product.id})}" class="btn btn-primary"
+                           style="display: inline-block; margin-right: 10px;">Update</a>
+                        <form th:action="@{/product/__${product.id}__/delete}" method="post"
+                              style="display: inline-block;">
                             <button type="submit" class="btn btn-danger">
                                 Delete
                             </button>

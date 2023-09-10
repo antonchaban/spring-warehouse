@@ -41,7 +41,7 @@
             </div>
 
             <div sec:authorize="isAuthenticated()">
-                Authenticated as <span sec:authentication="principal.name"></span>
+                <a class="btn btn-info" th:href="@{/profile}"><span sec:authentication="principal.name"></span></a>
                 <form action="/logout" method="post">
                     <button type="submit" style="text-align: center; width: 100%"
                             class="btn btn-primary btn-sm btn-block mt-2">
@@ -55,7 +55,7 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 content">
             <h2>Edit user</h2>
             <form th:action="@{/user/__${user.id}__/edit}" method="post">
-                <div class="form-group">
+                <div sec:authorize="hasAuthority('ADMIN')" class="form-group">
                     <label for="login">User login</label>
                     <input type="text" class="form-control" id="login" name="login" th:value="${user.login}" required>
                 </div>
