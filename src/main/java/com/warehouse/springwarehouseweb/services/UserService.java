@@ -20,5 +20,4 @@ public interface UserService {
 
     void deleteUser(Long id);
 
-//    void changeRoles(User user, Map<String, String> form); todo
 }

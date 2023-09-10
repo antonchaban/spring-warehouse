@@ -1,12 +1,15 @@
 package com.warehouse.springwarehouseweb.models;
 
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -21,11 +24,10 @@ public class Sales {
 
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn
-    private Product product;
-
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn
     private User user;
 
-    private Date saleDate;
+    private LocalDate saleDate;
+
+    @OneToMany(mappedBy = "pk.sale")
+    private List<SaleProduct> saleProducts = new ArrayList<>();
 }

@@ -43,6 +43,5 @@ public class Product {
     @JoinColumn
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-    private List<Sales> sales;
+
 }

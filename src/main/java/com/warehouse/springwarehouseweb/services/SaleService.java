@@ -1,6 +1,5 @@
 package com.warehouse.springwarehouseweb.services;
 
-import com.warehouse.springwarehouseweb.models.Product;
 import com.warehouse.springwarehouseweb.models.Sales;
 import com.warehouse.springwarehouseweb.models.User;
 
@@ -16,7 +15,7 @@ public interface SaleService {
 
     void deleteById(Long id);
 
-    void createSale(Sales sales, Principal principal);
+    Sales createSale(Sales sales, Principal principal);
 
     void deleteSales(User user, Long id);
 
