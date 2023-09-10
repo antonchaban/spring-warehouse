@@ -2,6 +2,7 @@ package com.warehouse.springwarehouseweb.controllers;
 
 import com.warehouse.springwarehouseweb.models.enums.Category;
 import com.warehouse.springwarehouseweb.services.impl.ProductServiceImpl;
+import com.warehouse.springwarehouseweb.services.impl.SaleProductServiceImpl;
 import com.warehouse.springwarehouseweb.services.impl.SaleServiceImpl;
 import com.warehouse.springwarehouseweb.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class HomeController {
     private final ProductServiceImpl productService;
     private final UserServiceImpl userService;
     private final SaleServiceImpl saleService;
+    private final SaleProductServiceImpl saleProductService;
     @GetMapping(value = "/")
     public String homePage(Model model, Principal principal) {
         model.addAttribute("categories", Arrays.stream(Category.values()).toList());
@@ -25,6 +27,8 @@ public class HomeController {
         model.addAttribute("sales", saleService.findAll());
         model.addAttribute("username", userService.getUserByPrincipal(principal));
         model.addAttribute("products", productService.findAll());
+        model.addAttribute("last3Sales", saleService.getLast3Sales());
+        model.addAttribute("mostSoldProducts", productService.getMostSoldProducts(5));
         return "index";
     }
 }

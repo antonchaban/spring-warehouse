@@ -66,7 +66,6 @@ public class SaleController {
         formDtos.forEach(saleProductDto -> saleProductDto.setProduct(productService.findById(saleProductDto
                 .getProduct()
                 .getId())));
-//        validateProductsExistence(formDtos);
         Sales sale = new Sales();
         sale = saleService.createSale(sale, principal);
         List<SaleProduct> saleProducts = new ArrayList<>();
@@ -76,23 +75,13 @@ public class SaleController {
                     .getId()), dto.getQuantity())));
         }
         sale.setSaleProducts(saleProducts);
+        for (SaleProductDto dto : formDtos) {
+            productService.updateAmount(dto.getProduct(), dto.getQuantity());
+        }
         saleService.update(sale);
-//        productService.createProduct(product, principal);
         return "redirect:/";
     }
 
-    private void validateProductsExistence(List<SaleProductDto> saleProducts) {
-        List<SaleProductDto> list = new ArrayList<>();
-        for (SaleProductDto dto : saleProducts) {
-            if (Objects.isNull(dto.getProduct())) {
-                list.add(dto);
-            }
-        }
-
-        if (!CollectionUtils.isEmpty(list)) {
-            System.err.println("Product not found");
-        }
-    }
 
     public static class SalesForm {
 

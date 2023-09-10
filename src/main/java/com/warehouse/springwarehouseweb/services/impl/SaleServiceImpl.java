@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,5 +60,15 @@ public class SaleServiceImpl implements SaleService { // todo implement
     @Override
     public void deleteSales(User user, Long id) {
 
+    }
+
+    public List<Sales> getLast3Sales() {
+        List<Sales> sortedSales = salesRepository.findAll().stream()
+                .sorted(Comparator.comparing(Sales::getId).reversed())
+                .collect(Collectors.toList());
+
+        return sortedSales.stream()
+                .limit(3)
+                .collect(Collectors.toList());
     }
 }

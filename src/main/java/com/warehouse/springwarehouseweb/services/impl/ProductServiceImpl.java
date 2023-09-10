@@ -1,9 +1,13 @@
 package com.warehouse.springwarehouseweb.services.impl;
 
 import com.warehouse.springwarehouseweb.models.Product;
+import com.warehouse.springwarehouseweb.models.SaleProduct;
+import com.warehouse.springwarehouseweb.models.Sales;
 import com.warehouse.springwarehouseweb.models.User;
 import com.warehouse.springwarehouseweb.models.enums.Category;
 import com.warehouse.springwarehouseweb.repositories.ProductRepository;
+import com.warehouse.springwarehouseweb.repositories.SaleProductRepository;
+import com.warehouse.springwarehouseweb.repositories.SalesRepository;
 import com.warehouse.springwarehouseweb.repositories.UserRepository;
 import com.warehouse.springwarehouseweb.services.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -11,12 +15,16 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    //    private final SalesRepository salesRepository;
+    private final SaleProductRepository saleProductRepository;
 
     @Override
     public List<Product> findAll() {
@@ -88,4 +96,21 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id).orElse(null);
     }
 
+    public void updateAmount(Product product, Integer amount) {
+        product.setQuantity(product.getQuantity() - amount);
+        productRepository.save(product);
+    }
+
+    public List<Product> getMostSoldProducts(int n) {
+        Map<Product, Integer> productQuantities = saleProductRepository.findAll().stream()
+                .collect(Collectors.groupingBy(SaleProduct::getProduct,
+                        Collectors.summingInt(SaleProduct::getQuantity)));
+
+        return productQuantities.
+                entrySet().stream()
+                .sorted(Map.Entry.<Product, Integer>comparingByValue().reversed())
+                .map(Map.Entry::getKey)
+                .limit(n)
+                .collect(Collectors.toList());
+    }
 }

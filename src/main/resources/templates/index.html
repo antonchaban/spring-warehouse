@@ -61,28 +61,31 @@
                     <td>Sales: <br><strong th:text="${sales.size()}"></strong></td>
                 </tr>
             </table>
-            <!--todo add sales-->
-            <h2>Highest Selling Products</h2>
+            <h2>Top 5 Most Sold Products</h2>
             <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>Title</th>
-                    <th>Total Sold</th>
-                    <th>Total Amount</th>
+                    <th>Price</th>
+                    <th>Total Amount Left</th>
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Add your data here dynamically -->
-                <tr>
-                    <td>Product 1</td>
-                    <td>100</td>
-                    <td>$1000</td>
+                <tr th:each="product : ${mostSoldProducts}">
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.price}">
+                    </td>
+                    <td th:text="${product.quantity}"></td>
                 </tr>
-                <!-- Repeat for other products -->
+                <tr th:if="${mostSoldProducts.size() == 0}">
+                    <td colspan="3">No data available</td>
+                </tr>
                 </tbody>
             </table>
 
-            <h2>Latest Sales</h2>
+
+            <!-- Add this code to display the last 3 sales -->
+            <h2>Last 3 Sales</h2>
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -92,15 +95,21 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Add your data here dynamically -->
-                <tr>
-                    <td>Product 1</td>
-                    <td>2023-09-09</td>
-                    <td>$100</td>
+                <tr th:each="sale : ${last3Sales}">
+                    <td>
+                        <!-- Iterate over sale's saleProducts and display their titles -->
+                        <span th:each="product : ${sale.saleProducts}" th:text="${product.product.name}"></span>
+                    </td>
+                    <td th:text="${sale.saleDate}"></td>
+                    <td th:text="${sale.saleProducts.size()}"></td>
                 </tr>
-                <!-- Repeat for other sales -->
+                <tr th:if="${#lists.isEmpty(last3Sales)}">
+                    <td colspan="3">No data available</td>
+                </tr>
                 </tbody>
             </table>
+
+
         </main>
 
 
