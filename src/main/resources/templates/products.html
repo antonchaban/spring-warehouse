@@ -52,6 +52,15 @@
 
         <!-- Content -->
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 content">
+            <div class="form-group">
+                <label for="category">Select Category:</label>
+                <select class="form-control" id="category" name="category" onchange="filterProducts()">
+                    <option value="">All Categories</option>
+                    <th:block th:each="category : ${categories}">
+                        <option th:value="${category.name}" th:text="${category.name}"></option>
+                    </th:block>
+                </select>
+            </div>
             <h3>Products List</h3>
             <a sec:authorize="hasAuthority('MANAGER') or hasAuthority('ADMIN')" th:href="@{/products/create}"
                class="btn btn-primary btn-sm mb-3">Add Product</a>
@@ -64,26 +73,34 @@
                     <th>Owner</th>
                     <th>Price</th>
                     <th>Photo</th>
+                    <th>Category</th>
                     <th sec:authorize="hasAuthority('ADMIN')">Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="product:${products}" th:if="${product.quantity > 0}">
+                <tr th:each="product : ${products}" th:if="${product.quantity > 0}">
                     <td th:text="${product.name}"></td>
                     <td th:text="${product.description}"></td>
                     <td th:text="${product.quantity}"></td>
                     <td>
-                        <a th:href="@{/user/{id}(id=${product.user.id})}"><p th:text="${product.user.name}"></p></a>
+                        <a th:href="@{/user/{id}(id=${product.user.id})}">
+                            <p th:text="${product.user.name}"></p>
+                        </a>
                     </td>
                     <td th:text="${product.price}">USD</td>
                     <td>
                         <img th:if="${product.imageId == null}" height="60px" width="100px"
                              src="https://media.tenor.com/yheo1GGu3FwAAAAd/rick-roll-rick-ashley.gif"
                              style="width: 100px; height: 100px;"/>
-                        <img th:if="${product.imageId != null}" height="60px" width="100px" th:src="@{/images/{id}(id=${product.imageId})}"
+                        <img th:if="${product.imageId != null}" height="60px" width="100px"
+                             th:src="@{/images/{id}(id=${product.imageId})}"
                              style="width: 100px; height: 100px;"/>
                     </td>
-                    <td sec:authorize="hasAuthority('ADMIN')">
+                    <td class="product-category" th:each="prcategory : ${product.category}">
+                        <span th:if="prcategory == null">No Category</span>
+                        <span th:if="prcategory != null" th:text="${prcategory}"></span>
+                    </td>
+                    <td sec:authorize="hasAuthority('ADMIN')" class="category-id">
                         <a th:href="@{/product/{id}/edit(id=${product.id})}" class="btn btn-primary"
                            style="display: inline-block; margin-right: 10px;">Update</a>
                         <form th:action="@{/product/__${product.id}__/delete}" method="post"
@@ -99,5 +116,22 @@
         </main>
     </div>
 </div>
+<!-- JavaScript to filter products based on category selection -->
+<script>
+    function filterProducts() {
+        var categoryId = document.getElementById("category").value;
+        var rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(function(row) {
+            var categoryCell = row.querySelector(".product-category").textContent;
+
+            if (categoryId === "" || categoryCell.includes(categoryId)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+</script>
 </body>
 </html>

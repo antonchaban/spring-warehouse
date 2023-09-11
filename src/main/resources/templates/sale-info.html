@@ -84,6 +84,7 @@
                                 <th>Quantity</th>
                                 <th>Product Seller</th>
                                 <th>Total Price</th>
+                                <th>Photo</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -93,6 +94,13 @@
                                 <td th:text="${salepr.quantity}"></td>
                                 <td th:text="${salepr.product.user.name}"></td>
                                 <td th:text="${salepr.getTotalPrice()}">USD</td>
+                                <td>
+                                    <img th:if="${salepr.product.imageId == null}" height="60px" width="100px"
+                                         src="https://media.tenor.com/yheo1GGu3FwAAAAd/rick-roll-rick-ashley.gif"
+                                         style="width: 100px; height: 100px;"/>
+                                    <img th:if="${salepr.product.imageId != null}" height="60px" width="100px" th:src="@{/images/{id}(id=${salepr.product.imageId})}"
+                                         style="width: 100px; height: 100px;"/>
+                                </td>
                             </tr>
                             </tbody>
                         </table>

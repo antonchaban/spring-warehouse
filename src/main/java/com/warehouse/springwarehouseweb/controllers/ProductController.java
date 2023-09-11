@@ -24,8 +24,8 @@ public class ProductController {
     private final UserServiceImpl userService;
 
     @GetMapping(value = "/products")
-    public String getAllProducts(Model model, Principal principal) {
-        model.addAttribute("username", userService.getUserByPrincipal(principal));
+    public String getAllProducts(Model model) {
+        model.addAttribute("categories", Category.values());
         model.addAttribute("products", productService.findAll());
         return "products";
     }
@@ -70,7 +70,6 @@ public class ProductController {
         productService.editProduct(updProduct, id, file);
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         model.addAttribute("product", productService.findById(id));
-//        return "redirect:/product/" + id; todo
         return "redirect:/products";
     }
 

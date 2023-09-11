@@ -28,5 +28,6 @@ public class Image {
     private byte[] content;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn
     private Product product;
 }
