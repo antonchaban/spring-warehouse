@@ -13,11 +13,19 @@
             display: none;
         }
 
+        #salesTable {
+            display: none;
+        }
+
         .user-profile {
             text-align: center; /* Center the user profile */
         }
 
         .product-list {
+            text-align: center; /* Center the product list */
+        }
+
+        .sales-list {
             text-align: center; /* Center the product list */
         }
     </style>
@@ -71,7 +79,7 @@
             <div class="user-profile">
                 <h2>User Profile</h2>
                 <div>
-                    <img class="img-fluid" th:src="@{../static/images/user-pic.png}"/>
+                    <img width="250" height="250" class="img-fluid" th:src="@{../static/images/user-pic.png}"/>
                 </div>
                 <h3 th:text="${user.name}"></h3>
                 <!-- Settings Button -->
@@ -118,6 +126,41 @@
                         </table>
                     </div>
                 </div>
+
+                <!--                Sales section-->
+
+                <div class="sales-list">
+                    <div class="container mt-4">
+                        <h1>Sales List</h1>
+                        <button id="toggleSalesButton" class="btn btn-primary mb-2">Toggle Table</button>
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="salesTable">
+                                <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Date</th>
+                                    <th>Total Sale</th>
+                                    <th>Total cost</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="sale : ${sales}">
+                                    <td>
+                                        <a th:href="@{/sale/{id}(id=${sale.id})}"><p
+                                                th:text="${sale.getSaleTitle()}"></p></a>
+                                    </td>
+                                    <td th:text="${sale.saleDate}"></td>
+                                    <td th:text="${sale.saleProducts.size()}"></td>
+                                    <td th:text="${sale.getTotalSaleAmount()}"> USD</td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(sales)}">
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Add Bootstrap and jQuery JavaScript links (required for Bootstrap functionality) -->
@@ -128,6 +171,15 @@
                     // Toggle the entire table's collapse state when the button is clicked
                     $("#toggleButton").click(function () {
                         $("#productTable").toggle();
+                    });
+                });
+            </script>
+
+            <script>
+                $(document).ready(function () {
+                    // Toggle the entire table's collapse state when the button is clicked
+                    $("#toggleSalesButton").click(function () {
+                        $("#salesTable").toggle();
                     });
                 });
             </script>
