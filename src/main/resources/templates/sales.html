@@ -55,32 +55,57 @@
             <h3>Sales List</h3>
             <a sec:authorize="hasAuthority('CUSTOMER') or hasAuthority('ADMIN')" th:href="@{/sales/create}"
                class="btn btn-primary btn-sm mb-3">Add Sale</a>
+            <!-- Add this form right above the table -->
+            <div class="mb-3">
+                <form sec:authorize="hasAuthority('CUSTOMER') or hasAuthority('ADMIN')" th:action="@{/sales/}" method="get">
+                    <div class="form-row">
+                        <div class="form-group col-md-5">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" class="form-control" id="startDate" name="startDate">
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label for="endDate">End Date:</label>
+                            <input type="date" class="form-control" id="endDate" name="endDate">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="mySales">My Sales:</label>
+                            <input type="checkbox" class="form-control" id="mySales" name="mySales" value="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+            </div>
+
             <table style="width:80%" border="1" class="table table-striped table-responsive-md">
                 <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Sale Title</th>
                     <th>User</th>
                     <th>Date</th>
                     <th>Size</th>
-                    <th>Actions</th>
-                    <th>More Info</th>
+                    <th sec:authorize="hasAuthority('CUSTOMER') or hasAuthority('ADMIN')">Actions</th>
                 </tr>
                 </thead>
                 <tbody id="sortableTableBody">
                 <tr th:each="sale, index : ${sales}" th:attr="data-sort=${sale.id}">
                     <td th:text="${sale.id}"></td>
+                    <td>
+                        <a th:href="@{/sale/{id}(id=${sale.id})}"><p th:text="${sale.getSaleTitle()}"></p></a>
+                    </td>
                     <td th:text="${sale.user.name}"></td>
                     <td th:text="${sale.saleDate}"></td>
                     <td th:text="${sale.saleProducts.size()}"></td>
-                    <td>
-                        <form th:action="@{/sale/__${sale.id}__/delete}" method="post"
+                    <td sec:authorize="hasAuthority('CUSTOMER') or hasAuthority('ADMIN')">
+                        <form th:if="${#authorization.expression('hasAuthority(''ADMIN'')')} or ${#authentication.name.equals(sale.user.login)}" th:action="@{/sale/__${sale.id}__/delete}" method="post"
                               style="display: inline-block;">
                             <button type="submit" class="btn btn-danger">
                                 Delete
                             </button>
                         </form>
                     </td>
-                    <td><a th:href="@{/sale/__${sale.id}__}">More Info</a></td>
                 </tr>
                 </tbody>
             </table>

@@ -74,4 +74,33 @@ public class SaleServiceImpl implements SaleService { // todo implement
                 .limit(3)
                 .collect(Collectors.toList());
     }
+
+    public List<Sales> findAllBySaleDateBetween(LocalDate startDate, LocalDate endDate) {
+        return salesRepository.findAllBySaleDateBetween(startDate, endDate);
+    }
+
+    public List<Sales> findAllBySaleDateAfter(LocalDate startDate) {
+        return salesRepository.findAllBySaleDateAfter(startDate);
+    }
+
+
+    public List<Sales> findAllBySaleDateBefore(LocalDate endDate) {
+        return salesRepository.findAllBySaleDateBefore(endDate);
+    }
+
+    public List<Sales> getMySalesBetweenDates(LocalDate startDate, LocalDate endDate, Long id) {
+        return salesRepository.findAllBySaleDateBetweenAndUserId(startDate, endDate, id);
+    }
+
+    public List<Sales> getMySalesAfterDate(LocalDate startDate, Long id) {
+        return salesRepository.findAllBySaleDateAfterAndUserId(startDate, id);
+    }
+
+    public List<Sales> getMySalesBeforeDate(LocalDate endDate, Long id) {
+        return salesRepository.findAllBySaleDateBeforeAndUserId(endDate, id);
+    }
+
+    public List<Sales> getMySales(Long id) {
+        return salesRepository.findAllByUserId(id);
+    }
 }

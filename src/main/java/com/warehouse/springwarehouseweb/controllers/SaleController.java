@@ -4,6 +4,7 @@ import com.warehouse.springwarehouseweb.dto.SaleProductDto;
 import com.warehouse.springwarehouseweb.models.Product;
 import com.warehouse.springwarehouseweb.models.SaleProduct;
 import com.warehouse.springwarehouseweb.models.Sales;
+import com.warehouse.springwarehouseweb.models.User;
 import com.warehouse.springwarehouseweb.models.enums.Category;
 import com.warehouse.springwarehouseweb.services.impl.ProductServiceImpl;
 import com.warehouse.springwarehouseweb.services.impl.SaleProductServiceImpl;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +23,10 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,9 +41,33 @@ public class SaleController {
     private final UserServiceImpl userService;
 
     @GetMapping(value = "/sales")
-    public String getAllSales(Model model, Principal principal) {
-        model.addAttribute("username", userService.getUserByPrincipal(principal));
-        model.addAttribute("sales", saleService.findAll());
+    public String getAllSales(@RequestParam(name = "startDate", required = false)
+                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                              @RequestParam(name = "endDate", required = false)
+                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                              @RequestParam(name = "mySales", required = false, defaultValue = "false") boolean mySales,
+                              Model model, Principal principal) {
+        User user = userService.getUserByPrincipal(principal);
+        model.addAttribute("username", user);
+        if (startDate != null && endDate != null) {
+            model.addAttribute("sales",
+                    mySales ? saleService
+                            .getMySalesBetweenDates(startDate, endDate, user.getId())
+                            : saleService.findAllBySaleDateBetween(startDate, endDate));
+        } else if (startDate != null) {
+            model.addAttribute("sales",
+                    mySales ? saleService
+                            .getMySalesAfterDate(startDate, user.getId())
+                            : saleService.findAllBySaleDateAfter(startDate));
+        } else if (endDate != null) {
+            model.addAttribute("sales",
+                    mySales ? saleService
+                            .getMySalesBeforeDate(endDate, user.getId())
+                            : saleService.findAllBySaleDateBefore(endDate));
+        } else {
+            model.addAttribute("sales",
+                    mySales ? saleService.getMySales(user.getId()) : saleService.findAll());
+        }
         return "sales";
     }
 
