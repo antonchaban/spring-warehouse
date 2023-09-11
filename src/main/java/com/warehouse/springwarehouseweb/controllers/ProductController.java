@@ -7,6 +7,7 @@ import com.warehouse.springwarehouseweb.services.impl.ProductServiceImpl;
 import com.warehouse.springwarehouseweb.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,6 +31,7 @@ public class ProductController {
         return "products";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @GetMapping(value = "/products/create")
     public String createProduct(Model model, Principal principal) {
         model.addAttribute("categories", Category.values());
@@ -37,12 +39,14 @@ public class ProductController {
         return "createProduct";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @PostMapping(value = "/products/create")
     public String createProductPost(Product product, Principal principal) {
         productService.createProduct(product, principal);
         return "redirect:/";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @GetMapping("/product/{id}/edit")
     public String editProduct(@PathVariable Long id, Model model, Principal principal) {
         User user = userService.getUserByPrincipal(principal);
@@ -59,6 +63,7 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @PostMapping("/product/{id}/edit")
     public String editProductPost(Model model, Principal principal, Product updProduct, @PathVariable Long id) {
         productService.editProduct(updProduct, id);
@@ -68,6 +73,7 @@ public class ProductController {
         return "redirect:/products";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @PostMapping("/product/{id}/delete")
     public String deleteProduct(@PathVariable Long id, Principal principal) {
         productService.deleteProduct(userService.getUserByPrincipal(principal), id);

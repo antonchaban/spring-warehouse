@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
@@ -42,6 +43,7 @@ public class SaleController {
         return "sales";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','CUSTOMER')")
     @GetMapping(value = "/sales/create")
     public String createSale(Model model, Principal principal) {
         List<Product> products = productService.findAll();
@@ -59,7 +61,7 @@ public class SaleController {
         return "sales-create";
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ADMIN','CUSTOMER')")
     @PostMapping(value = "/sales/create")
     public String createSalePost(SalesForm form, Principal principal) {
         List<SaleProductDto> formDtos = form.getProductSales();
@@ -83,6 +85,7 @@ public class SaleController {
         return "redirect:/";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','CUSTOMER')")
     @PostMapping(value = "/sale/{id}/delete")
     public String deleteSale(@PathVariable Long id) {
         saleService.deleteById(id);

@@ -122,6 +122,9 @@
                                     </form>
                                 </td>
                             </tr>
+                            <tr th:if="${#lists.isEmpty(products)}">
+                                <td colspan="6">No data available</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -154,7 +157,7 @@
                                     <td th:text="${sale.getTotalSaleAmount()}"> USD</td>
                                 </tr>
                                 <tr th:if="${#lists.isEmpty(sales)}">
-                                    <td colspan="3">No data available</td>
+                                    <td colspan="4">No data available</td>
                                 </tr>
                                 </tbody>
                             </table>
