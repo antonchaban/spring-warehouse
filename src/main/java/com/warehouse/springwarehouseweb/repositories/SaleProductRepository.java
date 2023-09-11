@@ -14,4 +14,9 @@ public interface SaleProductRepository extends JpaRepository<SaleProduct, SalePr
     @Transactional
     @Query("DELETE FROM SaleProduct sp WHERE sp.pk.sale.id = :id")
     void deleteAllBySaleId(Long id);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM SaleProduct sp WHERE sp.pk.product.id = :id")
+    void deleteAllByProductId(Long id);
 }

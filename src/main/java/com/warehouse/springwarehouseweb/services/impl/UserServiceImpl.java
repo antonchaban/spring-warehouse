@@ -1,8 +1,13 @@
 package com.warehouse.springwarehouseweb.services.impl;
 
+import com.warehouse.springwarehouseweb.models.Product;
+import com.warehouse.springwarehouseweb.models.Sales;
 import com.warehouse.springwarehouseweb.models.User;
 import com.warehouse.springwarehouseweb.models.enums.Category;
 import com.warehouse.springwarehouseweb.models.enums.Role;
+import com.warehouse.springwarehouseweb.repositories.ProductRepository;
+import com.warehouse.springwarehouseweb.repositories.SaleProductRepository;
+import com.warehouse.springwarehouseweb.repositories.SalesRepository;
 import com.warehouse.springwarehouseweb.repositories.UserRepository;
 import com.warehouse.springwarehouseweb.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +23,10 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final SalesRepository salesRepository;
+    private final ProductRepository productRepository;
+    private final SaleProductRepository saleProductRepository;
 
     @Override
     public void save(User user) {
@@ -52,6 +61,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
+        List<Sales> sales = salesRepository.findAllByUserId(id);
+        List<Product> products = productRepository.findAllByUser(userRepository.findById(id).get());
+        for (Product product : products) {
+            saleProductRepository.deleteAllByProductId(product.getId());
+            productRepository.delete(product);
+        }
+        for (Sales sale : sales) {
+            saleProductRepository.deleteAllBySaleId(sale.getId());
+            salesRepository.delete(sale);
+        }
         userRepository.findById(id).ifPresent(userRepository::delete);
     }
 

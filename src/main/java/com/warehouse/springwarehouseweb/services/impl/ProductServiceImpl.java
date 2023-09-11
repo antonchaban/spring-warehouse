@@ -4,6 +4,7 @@ import com.warehouse.springwarehouseweb.models.*;
 import com.warehouse.springwarehouseweb.models.enums.Category;
 import com.warehouse.springwarehouseweb.repositories.ProductRepository;
 import com.warehouse.springwarehouseweb.repositories.SaleProductRepository;
+import com.warehouse.springwarehouseweb.repositories.SalesRepository;
 import com.warehouse.springwarehouseweb.repositories.UserRepository;
 import com.warehouse.springwarehouseweb.services.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,8 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
-    //    private final SalesRepository salesRepository;
+
+    private final SalesRepository salesRepository;
     private final SaleProductRepository saleProductRepository;
 
     @Override
@@ -81,14 +83,13 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id)
                 .orElse(null);
         if (product != null) {
-            if (product.getUser().getId().equals(user.getId()) || user.isAdmin()) {
-                productRepository.delete(product);
-            } else System.err.println("User: " + user.getLogin() + " hasn't product " + id);
+            saleProductRepository.deleteAllByProductId(product.getId());
+            productRepository.delete(product);
         } else System.err.println("Product " + id + " is not found");
     }
 
     @Override
-    public void editProduct(Product updProduct, Long id, MultipartFile file) throws IOException  {
+    public void editProduct(Product updProduct, Long id, MultipartFile file) throws IOException {
         Product product = productRepository.findById(id).orElse(null);
         if (product == null) {
             System.err.println("Product " + id + " is not found");
@@ -112,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
                 product.getCategory().add(Category.OTHER);
             }
             Product productFromDb = productRepository.save(product);
-            if (file.getSize() != 0){
+            if (file.getSize() != 0) {
                 productFromDb.setImageId(productFromDb.getImages().get(0).getId());
                 productRepository.save(product);
             }
