@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
@@ -82,7 +83,14 @@ public class SaleController {
         return "redirect:/";
     }
 
+    @PostMapping(value = "/sale/{id}/delete")
+    public String deleteSale(@PathVariable Long id) {
+        saleService.deleteById(id);
+        return "redirect:/sales";
+    }
 
+
+    // SalesForm class for form validation
     public static class SalesForm {
 
         private List<SaleProductDto> productSales;

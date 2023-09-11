@@ -3,6 +3,7 @@ package com.warehouse.springwarehouseweb.services.impl;
 import com.warehouse.springwarehouseweb.models.Sales;
 import com.warehouse.springwarehouseweb.models.User;
 import com.warehouse.springwarehouseweb.repositories.ProductRepository;
+import com.warehouse.springwarehouseweb.repositories.SaleProductRepository;
 import com.warehouse.springwarehouseweb.repositories.SalesRepository;
 import com.warehouse.springwarehouseweb.repositories.UserRepository;
 import com.warehouse.springwarehouseweb.services.SaleService;
@@ -21,6 +22,7 @@ public class SaleServiceImpl implements SaleService { // todo implement
     private final UserRepository userRepository;
     private final SalesRepository salesRepository;
     private final ProductRepository productRepository;
+    private final SaleProductRepository saleProductRepository;
 
     @Override
     public List<Sales> findAll() {
@@ -39,6 +41,7 @@ public class SaleServiceImpl implements SaleService { // todo implement
 
     @Override
     public void deleteById(Long id) {
+        saleProductRepository.deleteAllBySaleId(id);
         salesRepository.findById(id).ifPresent(salesRepository::delete);
     }
 

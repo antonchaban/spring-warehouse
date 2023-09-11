@@ -92,6 +92,7 @@
                     <th>Title</th>
                     <th>Date</th>
                     <th>Total Sale</th>
+                    <th>Total cost</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -102,6 +103,9 @@
                     </td>
                     <td th:text="${sale.saleDate}"></td>
                     <td th:text="${sale.saleProducts.size()}"></td>
+                    <td>
+                        <span th:each="product : ${sale.saleProducts}" th:text="${product.getTotalPrice()}"></span>
+                    </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(last3Sales)}">
                     <td colspan="3">No data available</td>
