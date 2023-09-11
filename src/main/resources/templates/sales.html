@@ -62,10 +62,11 @@
                     <th>Date</th>
                     <th>Size</th>
                     <th>Actions</th>
+                    <th>More Info</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="sale:${sales}">
+                <tbody id="sortableTableBody">
+                <tr th:each="sale, index : ${sales}" th:attr="data-sort=${sale.id}">
                     <td th:text="${sale.id}"></td>
                     <td th:text="${sale.user.name}"></td>
                     <td th:text="${sale.saleDate}"></td>
@@ -78,9 +79,26 @@
                             </button>
                         </form>
                     </td>
+                    <td><a th:href="@{/sale/__${sale.id}__}">More Info</a></td>
                 </tr>
                 </tbody>
             </table>
+
+            <script>
+                // Sort the table rows by ID in descending order
+                var tableBody = document.getElementById('sortableTableBody');
+                var rows = Array.from(tableBody.getElementsByTagName('tr'));
+
+                rows.sort(function (a, b) {
+                    var idA = parseInt(a.getAttribute('data-sort'));
+                    var idB = parseInt(b.getAttribute('data-sort'));
+                    return idB - idA;
+                });
+
+                rows.forEach(function (row) {
+                    tableBody.appendChild(row);
+                });
+            </script>
         </main>
     </div>
 </div>

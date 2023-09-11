@@ -8,7 +8,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -30,4 +29,12 @@ public class Sales {
 
     @OneToMany(mappedBy = "pk.sale")
     private List<SaleProduct> saleProducts = new ArrayList<>();
+
+    public double getTotalSaleAmount() {
+        return saleProducts.stream().mapToDouble(SaleProduct::getTotalPrice).sum();
+    }
+
+    public String getSaleTitle() {
+        return "Sale #" + id + " - " + saleDate;
+    }
 }

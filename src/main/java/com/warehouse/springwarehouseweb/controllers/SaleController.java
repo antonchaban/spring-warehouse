@@ -89,6 +89,16 @@ public class SaleController {
         return "redirect:/sales";
     }
 
+    @GetMapping(value = "/sale/{id}")
+    public String getSaleById(@PathVariable Long id, Model model) throws NotFoundException {
+        Sales sale = saleService.findById(id);
+        if (Objects.isNull(sale)) {
+            throw new NotFoundException("Sale with id " + id + " not found");
+        }
+        model.addAttribute("sale", sale);
+        return "sale-info";
+    }
+
 
     // SalesForm class for form validation
     public static class SalesForm {
