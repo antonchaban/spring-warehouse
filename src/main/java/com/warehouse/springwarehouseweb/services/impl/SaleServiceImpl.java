@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class SaleServiceImpl implements SaleService { // todo implement
+public class SaleServiceImpl implements SaleService {
     private final UserRepository userRepository;
     private final SalesRepository salesRepository;
     private final ProductRepository productRepository;

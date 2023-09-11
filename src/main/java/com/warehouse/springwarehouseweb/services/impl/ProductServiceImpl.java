@@ -1,18 +1,16 @@
 package com.warehouse.springwarehouseweb.services.impl;
 
-import com.warehouse.springwarehouseweb.models.Product;
-import com.warehouse.springwarehouseweb.models.SaleProduct;
-import com.warehouse.springwarehouseweb.models.Sales;
-import com.warehouse.springwarehouseweb.models.User;
+import com.warehouse.springwarehouseweb.models.*;
 import com.warehouse.springwarehouseweb.models.enums.Category;
 import com.warehouse.springwarehouseweb.repositories.ProductRepository;
 import com.warehouse.springwarehouseweb.repositories.SaleProductRepository;
-import com.warehouse.springwarehouseweb.repositories.SalesRepository;
 import com.warehouse.springwarehouseweb.repositories.UserRepository;
 import com.warehouse.springwarehouseweb.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -52,10 +50,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void createProduct(Product product, Principal principal) {
-        if (principal == null) product.setUser(new User());
-        else product.setUser(userRepository.findUserByLogin(principal.getName()));
+    public void createProduct(Product product, Principal principal, MultipartFile file) throws IOException {
+        Image img;
+        if (principal == null) {
+            product.setUser(new User());
+        } else {
+            if (file.getSize() != 0) {
+                img = toImageEntity(file);
+                product.addImageToProduct(img);
+            }
+            product.setUser(userRepository.findUserByLogin(principal.getName()));
+        }
+        Product productFromDb = productRepository.save(product);
+        productFromDb.setImageId(productFromDb.getImages().get(0).getId());
         productRepository.save(product);
+    }
+
+    private Image toImageEntity(MultipartFile file) throws IOException {
+        Image img = new Image();
+        img.setName(file.getName());
+        img.setOriginalFileName(file.getOriginalFilename());
+        img.setSize(file.getSize());
+        img.setContentType(file.getContentType());
+        img.setContent(file.getBytes());
+        return img;
     }
 
     @Override
@@ -70,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void editProduct(Product updProduct, Long id) {
+    public void editProduct(Product updProduct, Long id, MultipartFile file) throws IOException  {
         Product product = productRepository.findById(id).orElse(null);
         if (product == null) {
             System.err.println("Product " + id + " is not found");
@@ -79,6 +97,11 @@ public class ProductServiceImpl implements ProductService {
             product.setPrice(updProduct.getPrice());
             product.setQuantity(updProduct.getQuantity());
             product.setDescription(updProduct.getDescription());
+            if (file.getSize() != 0) {
+                Image img = toImageEntity(file);
+                updProduct.addImageToProduct(img);
+                product.setImages(updProduct.getImages());
+            }
             try {
                 product.getCategory().clear();
                 String category = updProduct.getCategory().toArray()[0].toString();
@@ -88,7 +111,12 @@ public class ProductServiceImpl implements ProductService {
                 product.getCategory().clear();
                 product.getCategory().add(Category.OTHER);
             }
-            productRepository.save(product);
+            Product productFromDb = productRepository.save(product);
+            if (file.getSize() != 0){
+                productFromDb.setImageId(productFromDb.getImages().get(0).getId());
+                productRepository.save(product);
+            }
+
         }
     }
 

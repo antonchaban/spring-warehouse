@@ -10,12 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.security.Principal;
 
 @Controller
@@ -41,8 +40,9 @@ public class ProductController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @PostMapping(value = "/products/create")
-    public String createProductPost(Product product, Principal principal) {
-        productService.createProduct(product, principal);
+    public String createProductPost(Product product, Principal principal,
+                                    @RequestParam("file") MultipartFile file) throws IOException {
+        productService.createProduct(product, principal, file);
         return "redirect:/";
     }
 
@@ -65,8 +65,9 @@ public class ProductController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @PostMapping("/product/{id}/edit")
-    public String editProductPost(Model model, Principal principal, Product updProduct, @PathVariable Long id) {
-        productService.editProduct(updProduct, id);
+    public String editProductPost(Model model, Principal principal, Product updProduct, @PathVariable Long id,
+                                  @RequestParam("file") MultipartFile file) throws IOException {
+        productService.editProduct(updProduct, id, file);
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         model.addAttribute("product", productService.findById(id));
 //        return "redirect:/product/" + id; todo

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,8 +32,6 @@ public class Product {
 
     private Long quantity;
 
-//    private String image; // todo add image to product
-
     @ElementCollection(targetClass = Category.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "category"
             , joinColumns = @JoinColumn(name = "id"))
@@ -43,5 +42,13 @@ public class Product {
     @JoinColumn
     private User user;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+            mappedBy = "product")
+    private List<Image> images = new ArrayList<>();
+    private Long imageId;
 
+    public void addImageToProduct(Image image) {
+        image.setProduct(this);
+        images.add(image);
+    }
 }
