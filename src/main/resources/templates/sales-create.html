@@ -60,19 +60,26 @@
                     <tr>
                         <th>Product Name</th>
                         <th>Quantity</th>
+                        <th>Currently Available</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="productSale, rowStat : *{productSales}">
                         <td th:text="${productSale.product.name}"></td>
                         <td>
-                            <input type="number" th:field="*{productSales[__${rowStat.index}__].quantity}" />
-                            <input type="hidden" th:field="*{productSales[__${rowStat.index}__].product.id}" />
+                            <input type="number" th:field="*{productSales[__${rowStat.index}__].quantity}" min="0"
+                                   th:max="${productSale.product.quantity}"/>
+                            <input type="hidden" th:field="*{productSales[__${rowStat.index}__].product.id}"/>
+                        </td>
+                        <td align="center">
+                            <p th:if="${productSale.product.quantity == 0}">Out of stock</p>
+                            <p th:if="${productSale.product.quantity > 0}"
+                               th:text="${productSale.product.quantity}"></p>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-                <input type="submit" value="Create Sale" />
+                <input type="submit" value="Create Sale"/>
             </form>
         </main>
     </div>
